@@ -96,7 +96,7 @@ The application is fully configured for free deployment to **Streamlit Community
 ## 🎓 Academic Attribution
 
 - **Researcher**: Sanjana Manoj Dhopte (PRN: 202403040004)
-- **Project Title**: Ethical AI & Digital Competency Assessment Platform
+- **Project Title**: An Ethical Framework and Assessment Model for Bridging AI Adoption, Cyber security and Digital Literacy Gaps
 - **Guide**: Mrs. Ranjana Badre
 - **Institution**: MIT Academy of Engineering, Alandi (D), Pune
 - **Year**: 2025 - 2026
