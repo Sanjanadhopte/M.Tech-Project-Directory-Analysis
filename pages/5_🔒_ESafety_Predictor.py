@@ -162,13 +162,13 @@ with tab1:
             'Device_Type': device_type, 'Password_Strength': password_strength, 'Age_Group': age_group,
             'Geolocation': geolocation, 'Network_Type': network_type,
             'Malware_Detection': malware_det, 'Phishing_Attempts': phishing_att, 'Social_Media_Usage': social_media,
-            'VPN_Usage': vpn_usage, 'Cyberbullying_Reports': 0, 'Parental_Control_Alerts': parental_alerts,
-            'Firewall_Logs': 2, 'Login_Attempts': 2, 'Download_Risk': 0,
-            'Data_Breach_Notifications': 0, 'Online_Purchase_Risk': 0, 'Education_Content_Usage': edu_content,
+            'VPN_Usage': vpn_usage, 'Cyberbullying_Reports': phishing_att // 2, 'Parental_Control_Alerts': parental_alerts,
+            'Firewall_Logs': 2, 'Login_Attempts': 2, 'Download_Risk': malware_det * 2,
+            'Data_Breach_Notifications': malware_det, 'Online_Purchase_Risk': 0, 'Education_Content_Usage': edu_content,
             'Public_Network_Usage': public_network, 'Hours_Online': hours_online,
-            'Website_Visits': 5, 'Peer_Interactions': peer_interactions, 'Risky_Website_Visits': 0,
-            'Cloud_Service_Usage': 0, 'Unencrypted_Traffic': 0, 'Ad_Clicks': 0,
-            'Insecure_Login_Attempts': 0, 'E_Safety_Awareness_Score': esafety_score, 'Malware_Exposure_Risk': 0
+            'Website_Visits': 5, 'Peer_Interactions': peer_interactions, 'Risky_Website_Visits': (phishing_att * 2) + (malware_det * 2),
+            'Cloud_Service_Usage': 0, 'Unencrypted_Traffic': 1 if public_network else 0, 'Ad_Clicks': 0,
+            'Insecure_Login_Attempts': phishing_att, 'E_Safety_Awareness_Score': esafety_score, 'Malware_Exposure_Risk': malware_det * 3
         }
         
         pred_df = pd.DataFrame([pred_data])
@@ -257,18 +257,24 @@ with tab2:
             network_match = re.search(r'(wifi|cellular|data|ethernet)', chat_prompt.lower())
             network_type = network_match.group(1).capitalize() if network_match else 'WiFi'
             
+            # Threat parsing
+            malware_match = re.search(r'malware.*?(\d+)', chat_prompt.lower())
+            malware_det = int(malware_match.group(1)) if malware_match else 0
+            phishing_match = re.search(r'phishing.*?(\d+)', chat_prompt.lower())
+            phishing_att = int(phishing_match.group(1)) if phishing_match else 0
+            
             # Prediction
             pred_data = {
                 'Device_Type': device_type, 'Password_Strength': 'Weak', 'Age_Group': age_group,
                 'Geolocation': 'US', 'Network_Type': network_type,
-                'Malware_Detection': 0, 'Phishing_Attempts': 0, 'Social_Media_Usage': 'Low',
-                'VPN_Usage': 0, 'Cyberbullying_Reports': 0, 'Parental_Control_Alerts': 0,
-                'Firewall_Logs': 2, 'Login_Attempts': 2, 'Download_Risk': 0,
-                'Data_Breach_Notifications': 0, 'Online_Purchase_Risk': 0, 'Education_Content_Usage': 'None',
+                'Malware_Detection': malware_det, 'Phishing_Attempts': phishing_att, 'Social_Media_Usage': 'Low',
+                'VPN_Usage': 0, 'Cyberbullying_Reports': phishing_att // 2, 'Parental_Control_Alerts': 0,
+                'Firewall_Logs': 2, 'Login_Attempts': 2, 'Download_Risk': malware_det * 2,
+                'Data_Breach_Notifications': malware_det, 'Online_Purchase_Risk': 0, 'Education_Content_Usage': 'None',
                 'Public_Network_Usage': 1 if 'public' in chat_prompt.lower() else 0, 'Hours_Online': hours,
-                'Website_Visits': 5, 'Peer_Interactions': 'Low', 'Risky_Website_Visits': 0,
-                'Cloud_Service_Usage': 0, 'Unencrypted_Traffic': 0, 'Ad_Clicks': 0,
-                'Insecure_Login_Attempts': 0, 'E_Safety_Awareness_Score': 0.7, 'Malware_Exposure_Risk': 0
+                'Website_Visits': 5, 'Peer_Interactions': 'Low', 'Risky_Website_Visits': (phishing_att * 2) + (malware_det * 2),
+                'Cloud_Service_Usage': 0, 'Unencrypted_Traffic': 1 if 'public' in chat_prompt.lower() else 0, 'Ad_Clicks': 0,
+                'Insecure_Login_Attempts': phishing_att, 'E_Safety_Awareness_Score': 0.4 if malware_det > 0 else 0.7, 'Malware_Exposure_Risk': malware_det * 3
             }
             
             pred_df = pd.DataFrame([pred_data])
