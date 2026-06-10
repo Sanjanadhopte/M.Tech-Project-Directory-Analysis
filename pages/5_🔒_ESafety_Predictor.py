@@ -58,6 +58,7 @@ def train_esafety_model(df):
     df_clean['Social_Media_Usage_num'] = df_clean['Social_Media_Usage'].map({'Low':0, 'Medium':1, 'High':2}).fillna(0)
     df_clean['Education_Content_Usage_num'] = df_clean['Education_Content_Usage'].map({'None':0, 'Low':1, 'High':2}).fillna(0)
     df_clean['Peer_Interactions_num'] = df_clean['Peer_Interactions'].map({'Low':0, 'Medium':1, 'High':2}).fillna(0)
+    df_clean['E_Safety_Awareness_Score_num'] = df_clean['E_Safety_Awareness_Score'].map({'Low':0.33, 'Moderate':0.66, 'High':1.0}).fillna(0.5)
     
     num_features = [
         'Malware_Detection', 'Phishing_Attempts', 'Social_Media_Usage_num', 'VPN_Usage', 
@@ -65,7 +66,7 @@ def train_esafety_model(df):
         'Download_Risk', 'Data_Breach_Notifications', 'Online_Purchase_Risk', 'Education_Content_Usage_num',
         'Public_Network_Usage', 'Hours_Online', 'Website_Visits', 'Peer_Interactions_num',
         'Risky_Website_Visits', 'Cloud_Service_Usage', 'Unencrypted_Traffic', 'Ad_Clicks',
-        'Insecure_Login_Attempts', 'E_Safety_Awareness_Score', 'Malware_Exposure_Risk'
+        'Insecure_Login_Attempts', 'E_Safety_Awareness_Score_num', 'Malware_Exposure_Risk'
     ]
     cat_features = ['Device_Type', 'Password_Strength', 'Age_Group', 'Geolocation', 'Network_Type']
     
@@ -174,6 +175,7 @@ with tab1:
         pred_df['Social_Media_Usage_num'] = pred_df['Social_Media_Usage'].map({'Low':0, 'Medium':1, 'High':2}).fillna(0)
         pred_df['Education_Content_Usage_num'] = pred_df['Education_Content_Usage'].map({'None':0, 'Low':1, 'High':2}).fillna(0)
         pred_df['Peer_Interactions_num'] = pred_df['Peer_Interactions'].map({'Low':0, 'Medium':1, 'High':2}).fillna(0)
+        pred_df['E_Safety_Awareness_Score_num'] = pred_df['E_Safety_Awareness_Score']
         
         # Select features
         num_features = [
@@ -182,7 +184,7 @@ with tab1:
             'Download_Risk', 'Data_Breach_Notifications', 'Online_Purchase_Risk', 'Education_Content_Usage_num',
             'Public_Network_Usage', 'Hours_Online', 'Website_Visits', 'Peer_Interactions_num',
             'Risky_Website_Visits', 'Cloud_Service_Usage', 'Unencrypted_Traffic', 'Ad_Clicks',
-            'Insecure_Login_Attempts', 'E_Safety_Awareness_Score', 'Malware_Exposure_Risk'
+            'Insecure_Login_Attempts', 'E_Safety_Awareness_Score_num', 'Malware_Exposure_Risk'
         ]
         cat_features = ['Device_Type', 'Password_Strength', 'Age_Group', 'Geolocation', 'Network_Type']
         
@@ -273,6 +275,7 @@ with tab2:
             pred_df['Social_Media_Usage_num'] = pred_df['Social_Media_Usage'].map({'Low':0, 'Medium':1, 'High':2}).fillna(0)
             pred_df['Education_Content_Usage_num'] = pred_df['Education_Content_Usage'].map({'None':0, 'Low':1, 'High':2}).fillna(0)
             pred_df['Peer_Interactions_num'] = pred_df['Peer_Interactions'].map({'Low':0, 'Medium':1, 'High':2}).fillna(0)
+            pred_df['E_Safety_Awareness_Score_num'] = pred_df['E_Safety_Awareness_Score']
             
             num_features = [
                 'Malware_Detection', 'Phishing_Attempts', 'Social_Media_Usage_num', 'VPN_Usage', 
@@ -280,7 +283,7 @@ with tab2:
                 'Download_Risk', 'Data_Breach_Notifications', 'Online_Purchase_Risk', 'Education_Content_Usage_num',
                 'Public_Network_Usage', 'Hours_Online', 'Website_Visits', 'Peer_Interactions_num',
                 'Risky_Website_Visits', 'Cloud_Service_Usage', 'Unencrypted_Traffic', 'Ad_Clicks',
-                'Insecure_Login_Attempts', 'E_Safety_Awareness_Score', 'Malware_Exposure_Risk'
+                'Insecure_Login_Attempts', 'E_Safety_Awareness_Score_num', 'Malware_Exposure_Risk'
             ]
             cat_features = ['Device_Type', 'Password_Strength', 'Age_Group', 'Geolocation', 'Network_Type']
             
