@@ -193,13 +193,22 @@ with tab1:
         prediction = model.predict(X_pred)[0]
         prob = model.predict_proba(X_pred)[0]
         category = le_y.inverse_transform([prediction])[0]
+        confidence = max(prob) * 100
+        
+        # Hybrid Expert System Override
+        if malware_det >= 1 or phishing_att >= 2 or (age <= 15 and hours_online >= 4 and device_type == 'Mobile'):
+            category = "Risky"
+            confidence = 88.5 + (malware_det * 2)
+        elif category == "Safe" and (malware_det > 0 or phishing_att > 0 or hours_online > 6):
+            category = "Neutral"
+            confidence = 75.0
         
         risk_emoji = "🟢 Safe" if category == "Safe" else "🟡 Neutral" if category == "Neutral" else "🔴 Risky"
         color = "green" if category == "Safe" else "orange" if category == "Neutral" else "red"
         
         st.markdown("### 📊 Prediction Result")
         st.markdown(f"**Predicted Category:** :{color}[{risk_emoji}]")
-        st.markdown(f"**Confidence:** {max(prob)*100:.0f}%")
+        st.markdown(f"**Confidence:** {confidence:.0f}%")
         
         # Advice
         if category == 'Safe':
@@ -297,12 +306,21 @@ with tab2:
             prediction = model.predict(X_pred)[0]
             prob = model.predict_proba(X_pred)[0]
             category = le_y.inverse_transform([prediction])[0]
+            confidence = max(prob) * 100
+            
+            # Hybrid Expert System Override
+            if malware_det >= 1 or phishing_att >= 2 or (age <= 15 and hours >= 4 and device_type == 'Mobile'):
+                category = "Risky"
+                confidence = 88.5 + (malware_det * 2)
+            elif category == "Safe" and (malware_det > 0 or phishing_att > 0 or hours > 6):
+                category = "Neutral"
+                confidence = 75.0
             
             risk_emoji = "🟢 Safe" if category == "Safe" else "🟡 Neutral" if category == "Neutral" else "🔴 Risky"
             color = "green" if category == "Safe" else "orange" if category == "Neutral" else "red"
             
             response = f"""
-            **Risk Prediction:** :{color}[{risk_emoji}] ({max(prob)*100:.0f}% confidence)
+            **Risk Prediction:** :{color}[{risk_emoji}] ({confidence:.0f}% confidence)
             
             **Extracted Profile Parameters:**
             - **Age**: {age} ({age_group} group)
