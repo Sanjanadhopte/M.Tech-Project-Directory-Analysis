@@ -61,7 +61,7 @@ except Exception as e:
 def get_threat_embeddings(_samples):
     if model is None:
         return None
-    instructions = [s.get('instruction', '') + ' ' + s.get('input', '') for s in _samples]
+    instructions = [str(s.get('instruction') or '') + ' ' + str(s.get('input') or '') for s in _samples]
     return model.encode(instructions, convert_to_tensor=True, show_progress_bar=False)
 
 if model is not None:
@@ -79,7 +79,7 @@ def semantic_threat_search(query, samples, top_k=5):
         query = query.lower()
         results = []
         for s in samples:
-            text = (s.get('instruction', '') + ' ' + s.get('input', '')).lower()
+            text = (str(s.get('instruction') or '') + ' ' + str(s.get('input') or '')).lower()
             if query in text:
                 results.append(s)
             if len(results) >= top_k:
