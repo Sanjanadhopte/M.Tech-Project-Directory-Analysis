@@ -1,4 +1,4 @@
-# 🚀 EADCA — Ethical AI & Digital Competency Assessment Platform
+ An Ethical Framework and Assessment Model for Bridging AI Adoption, Cyber security and Digital Literacy Gaps
 
 A unified, interactive, and deployment-ready Streamlit application that consolidates the scattered tools, models, and analytical components of the M.Tech research project by **Sanjana Manoj Dhopte** (PRN: 202403040004), under the guidance of **Mrs. Ranjana Badre** at **MIT Academy of Engineering, Pune**.
 
