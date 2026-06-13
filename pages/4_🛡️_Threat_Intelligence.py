@@ -61,7 +61,7 @@ except Exception as e:
 def get_threat_embeddings(_samples):
     if model is None:
         return None
-    instructions = [str(s.get('instruction') or '') + ' ' + str(s.get('input') or '') for s in _samples]
+    instructions = [str(s.get('Instruction', s.get('instruction'))) + ' ' + str(s.get('Input', s.get('input'))) for s in _samples]
     return model.encode(instructions, convert_to_tensor=True, show_progress_bar=False)
 
 if model is not None:
@@ -79,7 +79,7 @@ def semantic_threat_search(query, samples, top_k=5):
         query = query.lower()
         results = []
         for s in samples:
-            text = (str(s.get('instruction') or '') + ' ' + str(s.get('input') or '')).lower()
+            text = (str(s.get('Instruction', s.get('instruction'))) + ' ' + str(s.get('Input', s.get('input')))).lower()
             if query in text:
                 results.append(s)
             if len(results) >= top_k:
@@ -121,9 +121,9 @@ with tab1:
 
     sample = st.session_state.quiz_sample
 
-    st.info(f"**Scenario:** {sample.get('instruction', '')}")
-    if sample.get('input'):
-        st.warning(f"**Evidence / Logs:**\n```\n{sample.get('input')}\n```")
+    st.info(f"**Scenario:** {sample.get('Instruction', sample.get('instruction', ''))}")
+    if sample.get('Input') or sample.get('input'):
+        st.warning(f"**Evidence / Logs:**\n```\n{sample.get('Input', sample.get('input', ''))}\n```")
 
     user_analysis = st.text_area(
         "Analyze the threat scenario and type your recommended mitigation steps:",
@@ -139,7 +139,7 @@ with tab1:
             st.session_state.user_analysis = user_analysis
 
     if st.session_state.quiz_submitted:
-        st.success(f"**Expert Analysis & Remediation:**\n{sample.get('output', '')}")
+        st.success(f"**Expert Analysis & Remediation:**\n{sample.get('Output', sample.get('output', ''))}")
         st.metric("System Severity Score (CVSS Estimate)", sample.get('Metadata', {}).get('CVSS', 'N/A'))
 
 # --- Tab 2: Semantic Search ---
@@ -156,14 +156,14 @@ with tab2:
         if results:
             st.write(f"Showing top {len(results)} matches:")
             for i, threat in enumerate(results):
-                threat_type = threat.get('Metadata', {}).get('threattype', 'Unknown')
+                threat_type = threat.get('Metadata', {}).get('threat_type', threat.get('Metadata', {}).get('threattype', 'Unknown'))
                 cvss = threat.get('Metadata', {}).get('CVSS', 'N/A')
                 
                 with st.expander(f"Match #{i+1}: {threat_type} (CVSS: {cvss})"):
-                    st.markdown(f"**Scenario:** {threat.get('instruction', '')}")
-                    if threat.get('input'):
-                        st.markdown(f"**Logs/IOCs:**\n```\n{threat.get('input')}\n```")
-                    st.success(f"**Mitigation Plan:**\n{threat.get('output', '')}")
+                    st.markdown(f"**Scenario:** {threat.get('Instruction', threat.get('instruction', ''))}")
+                    if threat.get('Input') or threat.get('input'):
+                        st.markdown(f"**Logs/IOCs:**\n```\n{threat.get('Input', threat.get('input', ''))}\n```")
+                    st.success(f"**Mitigation Plan:**\n{threat.get('Output', threat.get('output', ''))}")
         else:
             st.write("No matching threats found.")
 
@@ -178,7 +178,7 @@ with tab3:
         
         with col1:
             st.markdown("#### Threat Types Distribution")
-            df['ThreatType'] = df['Metadata'].apply(lambda x: x.get('threattype') if isinstance(x, dict) else 'Unknown')
+            df['ThreatType'] = df['Metadata'].apply(lambda x: x.get('threat_type', x.get('threattype')) if isinstance(x, dict) else 'Unknown')
             type_counts = df['ThreatType'].value_counts().reset_index()
             type_counts.columns = ['Threat Type', 'Count']
             
