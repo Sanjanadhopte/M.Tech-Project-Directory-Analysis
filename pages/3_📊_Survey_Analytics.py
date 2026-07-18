@@ -171,7 +171,7 @@ with tab1:
         st.metric("NLP Filtered Responses", len(df_nlp))
         
     st.subheader("Dataset Preview (First 5 Rows)")
-    st.dataframe(df_raw.head(5), use_container_width=True)
+    st.dataframe(df_raw.head(50), use_container_width=True)
 
 # --- Tab 2: NLP & Sentiment ---
 with tab2:
@@ -230,7 +230,7 @@ with tab2:
     
     if filtered_responses:
         st.write(f"Showing up to 10 sample responses for **{selected_sent}** sentiment:")
-        for idx, resp in enumerate(filtered_responses[:10]):
+        for idx, resp in enumerate(filtered_responses[:50]):
             st.info(f"**Response {idx+1}:** {resp}")
     else:
         st.write("No responses found for this sentiment.")
